@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
+// or use a clientCreator function to create ClientProvider dynamically
 ValueNotifier<GraphQLClient> client = ValueNotifier(
   GraphQLClient(
     cache: InMemoryCache(),
@@ -36,5 +37,11 @@ mutation UpdateTodo(\$id: ID!, \$accomplished: Boolean!) {
   updateTodo(id: \$id, accomplished: \$accomplished) {
     id
   }
+}
+""";
+
+final String removeTodoMutation = """
+mutation RemoveTodo(\$id: ID!){
+  removeTodo(id: \$id)
 }
 """;

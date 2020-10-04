@@ -38,7 +38,8 @@ class HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  Future<String> handleCreate(BuildContext context, dynamic id) async {
+  Future<String> handleCreate(
+      BuildContext context, dynamic id, Refetch refetch) async {
     return showDialog<String>(
         context: context,
         barrierDismissible: true,
@@ -55,8 +56,8 @@ class HomePageState extends State<HomePage> {
                           child: TextField(
                             autofocus: true,
                             decoration: InputDecoration(
-                              labelText: "Title",
-                              labelStyle: TextStyle(fontSize: 16),
+                              labelText: "ToDo Title",
+                              labelStyle: TextStyle(fontSize: 18),
                               hintText: "Make self better",
                               hintStyle: TextStyle(fontSize: 16),
                               errorText: result.hasException
@@ -68,10 +69,9 @@ class HomePageState extends State<HomePage> {
                         ),
                         Expanded(
                           child: TextField(
-                            autofocus: true,
                             decoration: InputDecoration(
-                              labelText: "Description",
-                              labelStyle: TextStyle(fontSize: 16),
+                              labelText: "ToDo Description",
+                              labelStyle: TextStyle(fontSize: 18),
                               hintText: "Learning & Loving",
                               hintStyle: TextStyle(fontSize: 16),
                               errorText: result.hasException
@@ -86,9 +86,9 @@ class HomePageState extends State<HomePage> {
                   ),
                   actions: <Widget>[
                     FlatButton(
-                        onPressed: () {
+                        onPressed: () async {
                           runMutation({
-                            "id": id,
+                            "id": id + 1,
                             "title": titleController.text,
                             "description": descController.text
                           });
@@ -106,34 +106,38 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Query(
         options: QueryOptions(
-          documentNode: gql(
-            getAllToDosQuery,
-          ),
-          variables: {},
-          context: {},
-        ),
-        builder: (QueryResult result,
-            {VoidCallback refetch, FetchMore fetchMore}) {
+            documentNode: gql(
+              getAllToDosQuery,
+            ),
+            variables: {},
+            context: {},
+            pollInterval: 1),
+        builder: (QueryResult result, {Refetch refetch, FetchMore fetchMore}) {
           return Scaffold(
             appBar: AppBar(
               title: Text("GraphQL ToDo List"),
             ),
             body: Center(
-              child: result.hasException
-                  ? Text(
-                      result.exception.toString(),
-                      style: TextStyle(color: Colors.red, fontSize: 16),
-                    )
-                  : result.loading
-                      ? CircularProgressIndicator()
-                      : ToDoList(
-                          list: result.data['allTodos'], onRefresh: refetch),
+              child: Container(
+                // width: 398,
+                padding: EdgeInsets.only(top: 6),
+                child: result.hasException
+                    ? Text(
+                        result.exception.toString(),
+                        style: TextStyle(color: Colors.red, fontSize: 16),
+                      )
+                    : result.loading
+                        ? CircularProgressIndicator()
+                        : ToDoList(
+                            list: result.data['allTodos'], onRefresh: refetch),
+              ),
             ),
             floatingActionButton: FloatingActionButton(
               tooltip: "Create Next ToDo!",
               child: Icon(Icons.add),
               onPressed: () => (!result.hasException && !result.loading)
-                  ? this.handleCreate(context, result.data['allTodos'].length)
+                  ? this.handleCreate(
+                      context, result.data['allTodos'].length, refetch)
                   : () {},
             ),
           );
@@ -161,20 +165,55 @@ class ToDoList extends StatelessWidget {
               itemCount: this.list.length,
               itemBuilder: (BuildContext context, int idx) {
                 final item = this.list[idx];
-                return CheckboxListTile(
-                    title: Text(item['title']) ?? "",
-                    subtitle: Text(item['description']) ?? "",
-                    value: item['accomplished'],
-                    onChanged: (_) {
-                      runMutation({
-                        "id": idx + 1,
-                        'accomplished': !item['accomplished']
-                      });
-                      print(
-                          "Update Task [${item['title']}] Status to: ${item['accomplished'] ? 'Done' : 'ToDo'}");
-                      onRefresh();
-                    });
+                return Container(
+                    decoration: BoxDecoration(
+                      border: Border(
+                          bottom:
+                              BorderSide(width: 3, color: Colors.lightBlue)),
+                    ),
+                    child: CheckboxListTile(
+                        contentPadding: const EdgeInsets.fromLTRB(2, 0, 5, 2),
+                        title: _title(text: item['title']),
+                        subtitle: _subtitle(text: item['description']),
+                        value: item['accomplished'],
+                        secondary: Mutation(
+                          options: MutationOptions(
+                              documentNode: gql(removeTodoMutation)),
+                          builder:
+                              (RunMutation runMutation, QueryResult result) =>
+                                  IconButton(
+                            iconSize: 22,
+                            splashRadius: 18.0,
+                            padding: const EdgeInsets.all(0.0),
+                            icon: Icon(
+                              Icons.remove_circle,
+                              size: 24,
+                              color: Colors.redAccent,
+                            ),
+                            tooltip: 'Delete this item',
+                            onPressed: () {
+                              runMutation({"id": item['id']});
+                            },
+                          ),
+                        ),
+                        tristate: true,
+                        onChanged: (_) {
+                          runMutation({
+                            "id": idx + 1,
+                            'accomplished': !item['accomplished']
+                          });
+                          print(
+                              "Update Task [${item['title']}] Status to: ${item['accomplished'] ? 'Done' : 'ToDo'}");
+                          onRefresh();
+                        }));
               },
             ));
   }
+
+  Widget _title({String text = ""}) =>
+      Text(text, style: TextStyle(fontSize: 20, color: Colors.blue));
+
+  Widget _subtitle({String text = ""}) => Padding(
+      child: Text(text, style: TextStyle(fontSize: 16, color: Colors.black87)),
+      padding: EdgeInsets.only(top: 8));
 }
