@@ -33,6 +33,8 @@ class HomePageState extends State<HomePage> {
   final titleController = TextEditingController();
   final descController = TextEditingController();
 
+  bool _isSaving = true;
+
   @override
   void initState() {
     super.initState();
@@ -44,7 +46,14 @@ class HomePageState extends State<HomePage> {
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) => Mutation(
-            options: MutationOptions(documentNode: gql(createToDoMutation)),
+            options: MutationOptions(
+                documentNode: gql(createToDoMutation),
+                onCompleted: (_) {
+                  setState(() {
+                    _isSaving = false;
+                  });
+                  Navigator.of(context).pop();
+                }),
             builder: (RunMutation runMutation, QueryResult result) =>
                 AlertDialog(
                   title: Text('Got an excellent idea?'),
@@ -85,19 +94,27 @@ class HomePageState extends State<HomePage> {
                     ),
                   ),
                   actions: <Widget>[
-                    FlatButton(
-                        onPressed: () async {
-                          runMutation({
-                            "id": id + 1,
-                            "title": titleController.text,
-                            "description": descController.text
-                          });
-                          Navigator.of(context).pop();
-                        },
-                        child: Text(
-                          "Create",
-                          style: TextStyle(fontSize: 16),
-                        ))
+                    _isSaving
+                        ? SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(),
+                          )
+                        : FlatButton(
+                            onPressed: () async {
+                              setState(() {
+                                _isSaving = true;
+                              });
+                              runMutation({
+                                "id": id + 1,
+                                "title": titleController.text,
+                                "description": descController.text
+                              });
+                            },
+                            child: Text(
+                              "Create",
+                              style: TextStyle(fontSize: 16),
+                            ))
                   ],
                 )));
   }
@@ -115,11 +132,16 @@ class HomePageState extends State<HomePage> {
         builder: (QueryResult result, {Refetch refetch, FetchMore fetchMore}) {
           return Scaffold(
             appBar: AppBar(
-              title: Text("GraphQL ToDo List"),
+              leading: Icon(
+                Icons.notes,
+                size: 34,
+              ),
+              title: Text("GraphQL ToDo List",
+                  textAlign: TextAlign.center, style: TextStyle(fontSize: 26)),
+              centerTitle: true,
             ),
             body: Center(
               child: Container(
-                // width: 398,
                 padding: EdgeInsets.only(top: 6),
                 child: result.hasException
                     ? Text(
@@ -134,7 +156,10 @@ class HomePageState extends State<HomePage> {
             ),
             floatingActionButton: FloatingActionButton(
               tooltip: "Create Next ToDo!",
-              child: Icon(Icons.add),
+              child: Icon(
+                Icons.add,
+                size: 30,
+              ),
               onPressed: () => (!result.hasException && !result.loading)
                   ? this.handleCreate(
                       context, result.data['allTodos'].length, refetch)
@@ -187,7 +212,7 @@ class ToDoList extends StatelessWidget {
                             padding: const EdgeInsets.all(0.0),
                             icon: Icon(
                               Icons.remove_circle,
-                              size: 24,
+                              size: 28,
                               color: Colors.redAccent,
                             ),
                             tooltip: 'Delete this item',
@@ -204,16 +229,16 @@ class ToDoList extends StatelessWidget {
                           });
                           print(
                               "Update Task [${item['title']}] Status to: ${item['accomplished'] ? 'Done' : 'ToDo'}");
-                          onRefresh();
+                          // onRefresh();
                         }));
               },
             ));
   }
 
   Widget _title({String text = ""}) =>
-      Text(text, style: TextStyle(fontSize: 20, color: Colors.blue));
+      Text(text, style: TextStyle(fontSize: 22, color: Colors.blue));
 
   Widget _subtitle({String text = ""}) => Padding(
-      child: Text(text, style: TextStyle(fontSize: 16, color: Colors.black87)),
+      child: Text(text, style: TextStyle(fontSize: 16, color: Colors.black54)),
       padding: EdgeInsets.only(top: 8));
 }

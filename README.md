@@ -4,7 +4,7 @@ A simple **TODO LIST** shows basic usage of combination of `Flutter` & `GraphQL`
 
 ## Article
 
-**WIP...**
+**[WIP]** [在Flutter中使用GraphQL的初体验](./docs/README.md)
 
 ## Notice
 

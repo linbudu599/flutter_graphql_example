@@ -30,6 +30,12 @@ const data: { todos: IToDoItem[] } = {
 
 const PORT = process.env.PORT;
 
+// app.get("/graphql", (_, __, next) => {
+//   console.log(1);
+//   next();
+//   console.log(1);
+// });
+
 app.use("/graphql", jsonGraphqlExpress(data));
 
 app.listen(PORT, () => {
