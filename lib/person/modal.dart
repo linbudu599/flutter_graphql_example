@@ -37,7 +37,7 @@ class OperationModalState extends State<OperationModal> {
   }
 
   Future<Null> _handleAdd() async {
-    GraphQLClient _client = clientToQuery();
+    GraphQLClient _client = clientCreator();
     QueryResult result = await _client.mutate(
       MutationOptions(
         documentNode: gql(addPerson(
@@ -56,7 +56,7 @@ class OperationModalState extends State<OperationModal> {
   }
 
   Future<Null> _handleEdit() async {
-    GraphQLClient _client = clientToQuery();
+    GraphQLClient _client = clientCreator();
     QueryResult result = await _client.mutate(
       MutationOptions(
           documentNode: gql(
@@ -78,7 +78,7 @@ class OperationModalState extends State<OperationModal> {
   Widget get _deleteBtn => FlatButton(
         child: Text("Delete"),
         onPressed: () async {
-          GraphQLClient _client = clientToQuery();
+          GraphQLClient _client = clientCreator();
           QueryResult result = await _client.mutate(
             MutationOptions(
               documentNode: gql(deletePerson(personId.text)),

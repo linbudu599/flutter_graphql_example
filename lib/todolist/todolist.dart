@@ -134,7 +134,7 @@ class HomePageState extends State<HomePage> {
                 size: 34,
               ),
               title: Text("GraphQL ToDo List",
-                  textAlign: TextAlign.center, style: TextStyle(fontSize: 26)),
+                  textAlign: TextAlign.center, style: TextStyle(fontSize: 24)),
               centerTitle: true,
             ),
             body: Center(
@@ -156,7 +156,7 @@ class HomePageState extends State<HomePage> {
               tooltip: "Create Next ToDo!",
               child: Icon(
                 Icons.add,
-                size: 30,
+                size: 28,
               ),
               onPressed: () =>
                   (!queryResult.hasException && !queryResult.loading)

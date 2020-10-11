@@ -14,13 +14,11 @@ ValueNotifier<GraphQLClient> client = ValueNotifier(
       cache: InMemoryCache()),
 );
 
-GraphQLClient clientToQuery() {
-  return GraphQLClient(
-    // cache: OptimisticCache(dataIdFromObject: typenameDataIdFromObject),
-    cache: InMemoryCache(),
-    link: httpLink,
-  );
-}
+GraphQLClient clientCreator() => GraphQLClient(
+      // cache: OptimisticCache(dataIdFromObject: typenameDataIdFromObject),
+      cache: InMemoryCache(),
+      link: httpLink,
+    );
 
 String getAll() {
   return """ 
