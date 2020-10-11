@@ -21,3 +21,10 @@
 - 删除列表项
 - 新增列表项
 - 整体感受阐述
+
+**缓存相关!**
+
+## 命令式与编程式
+
+- 命令式: 根据result.loading / result.hasException 等切换UI
+- 编程式: 手动获取client, 调用client的方法 client.query / client.mutate
