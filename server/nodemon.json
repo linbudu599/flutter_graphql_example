@@ -9,7 +9,7 @@
   },
 
   "ext": "ts",
-  "watch": ["./app.ts"],
+  "watch": ["./*.ts"],
   "env": {
     "NODE_ENV": "development",
     "PORT": 1111

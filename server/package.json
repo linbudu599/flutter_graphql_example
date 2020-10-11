@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "nodemon ./app.ts"
+    "dev": "nodemon ./app.ts",
+    "dev:person":"nodemon ./person.ts"
   },
   "keywords": [],
   "author": "",
