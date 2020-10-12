@@ -1,6 +1,6 @@
 # Flutter-GraphQL-Example
 
-A simple **TODO LIST** shows basic usage of combination of `Flutter` & `GraphQL`.
+A simple demo shows basic usage of combination of `Flutter` & `GraphQL`.
 
 ## Article
 
@@ -8,7 +8,25 @@ A simple **TODO LIST** shows basic usage of combination of `Flutter` & `GraphQL`
 
 ## Notice
 
-Creating [`/res/xml/network_security_config.xml`](android/app/src/main/res/xml/network_security_config.xml) And Editing [`AndroidManifest.xml`](android/app/src/profile/AndroidManifest.xml) to enable HTTP request in Emulator, otherwise you will got **'Insecure HTTP is not allowed by platform' error**. see [here](https://flutter.dev/docs/release/breaking-changes/network-policy-ios-android#migration-guide) for more details about.
+Creating [`/res/xml/network_security_config.xml`](android/app/src/main/res/xml/network_security_config.xml) And Editing [`AndroidManifest.xml`](android/app/src/main/AndroidManifest.xml) to enable HTTP request in Emulator, otherwise you will got **'Insecure HTTP is not allowed by platform' error**. see [here](https://flutter.dev/docs/release/breaking-changes/network-policy-ios-android#migration-guide) for more details about.
+
+```xml
+<!-- network_security_config.xml -->
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" />
+</network-security-config>
+
+<!-- AndroidManifest.xml -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.flutter_graphql_example">
+   <application
+        android:networkSecurityConfig="@xml/network_security_config">
+    <!-- ... -->
+    </application>
+</manifest>
+
+```
 
 ## Prerequisites
 
@@ -20,6 +38,11 @@ Creating [`/res/xml/network_security_config.xml`](android/app/src/main/res/xml/n
 
 ## Usage
 
+Two kinds usage of `graphql_flutter` package is included:
+
+- **Imperative Usage**: [Person Admin](lib/person/person.dart)
+- **Declarative Usage**: [ToDo List](lib/todolist/todolist.dart)
+
 ```bash
 git clone git@github.com:linbudu599/flutter_graphql_example.git
 
@@ -30,13 +53,24 @@ cd flutter_graphql_example
 
 ```bash
 cd ./server
+
 npm install
+
+# TodoList API
 npm run dev
+
+# Person API
+npm run dev:person
 ```
 
 > Powered by [JSON-GraphQL-Server](https://github.com/marmelab/json-graphql-server).
 
-As server gets ready, you can use visit [http://localhost:1111/graphql](http://localhost:1111/graphql) to check your **GraphQL Server** easily by **GraphIQL**, which contains definition of `Query` / `Mutation` info.
+As server gets ready, you can use visit
+
+- [http://localhost:1111/graphql](http://localhost:1111/graphql)  (ToDo List)
+- [http://localhost:4000/graphql](http://localhost:4000/graphql)  (Person Admin)
+
+to check your **GraphQL Server** easily by [**GraphIQL**](https://github.com/graphql/graphiql), which contains definition of `Query` / `Mutation` info.
 
 ### Client
 
