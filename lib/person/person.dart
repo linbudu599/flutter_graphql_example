@@ -5,9 +5,7 @@ import "client.dart";
 import "modal.dart";
 import "model.dart";
 
-class PersonPage extends StatelessWidget {
-  const PersonPage({Key key}) : super(key: key);
-
+class PersonApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GraphQLProvider(

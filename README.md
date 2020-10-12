@@ -38,7 +38,7 @@ Creating [`/res/xml/network_security_config.xml`](android/app/src/main/res/xml/n
 
 ## Usage
 
-Two kinds usage of `graphql_flutter` package is included:
+Two kinds usage of `graphql_flutter` package are included:
 
 - **Imperative Usage**: [Person Admin](lib/person/person.dart)
 - **Declarative Usage**: [ToDo List](lib/todolist/todolist.dart)
@@ -56,11 +56,8 @@ cd ./server
 
 npm install
 
-# TodoList API
+# both 2 servers will start
 npm run dev
-
-# Person API
-npm run dev:person
 ```
 
 > Powered by [JSON-GraphQL-Server](https://github.com/marmelab/json-graphql-server).
