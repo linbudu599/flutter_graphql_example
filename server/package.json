@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "nodemon ./app.ts",
-    "dev:person":"nodemon ./person.ts"
+    "dev:person": "nodemon ./person.ts"
   },
   "keywords": [],
   "author": "",
