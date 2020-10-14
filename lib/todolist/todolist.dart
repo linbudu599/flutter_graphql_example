@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import "client.dart";
 
-class GraphQLToDoDemo extends StatelessWidget {
+class ToDoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GraphQLProvider(
