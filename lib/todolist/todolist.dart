@@ -185,53 +185,56 @@ class ToDoList extends StatelessWidget {
               print("Mutation Completed");
             }),
         builder: (RunMutation runMutation, QueryResult updateResult) =>
-            ListView.builder(
-              itemCount: this.list.length,
-              itemBuilder: (BuildContext context, int idx) {
-                final item = this.list[idx];
-                return Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                          bottom:
-                              BorderSide(width: 3, color: Colors.lightBlue)),
-                    ),
-                    child: CheckboxListTile(
-                        contentPadding: const EdgeInsets.fromLTRB(2, 0, 5, 2),
-                        title: _title(text: item['title']),
-                        subtitle: _subtitle(text: item['description']),
-                        value: item['accomplished'],
-                        secondary: Mutation(
-                          options: MutationOptions(
-                              documentNode: gql(removeTodoMutation)),
-                          builder:
-                              (RunMutation runMutation, QueryResult result) =>
-                                  IconButton(
-                            iconSize: 22,
-                            splashRadius: 18.0,
-                            padding: const EdgeInsets.all(0.0),
-                            icon: Icon(
-                              Icons.remove_circle,
-                              size: 28,
-                              color: Colors.redAccent,
-                            ),
-                            tooltip: 'Delete this item',
-                            onPressed: () {
-                              runMutation({"id": item['id']});
-                            },
-                          ),
+            SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: ListView.builder(
+                  itemCount: this.list.length,
+                  itemBuilder: (BuildContext context, int idx) {
+                    final item = this.list[idx];
+                    return Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                                  width: 3, color: Colors.lightBlue)),
                         ),
-                        tristate: true,
-                        onChanged: (_) {
-                          runMutation({
-                            "id": idx + 1,
-                            'accomplished': !item['accomplished']
-                          });
-                          print(
-                              "Update Task [${item['title']}] Status to: ${item['accomplished'] ? 'Done' : 'ToDo'}");
-                          // onRefresh();
-                        }));
-              },
-            ));
+                        child: CheckboxListTile(
+                            contentPadding:
+                                const EdgeInsets.fromLTRB(2, 0, 5, 2),
+                            title: _title(text: item['title']),
+                            subtitle: _subtitle(text: item['description']),
+                            value: item['accomplished'],
+                            secondary: Mutation(
+                              options: MutationOptions(
+                                  documentNode: gql(removeTodoMutation)),
+                              builder: (RunMutation runMutation,
+                                      QueryResult result) =>
+                                  IconButton(
+                                iconSize: 22,
+                                splashRadius: 18.0,
+                                padding: const EdgeInsets.all(0.0),
+                                icon: Icon(
+                                  Icons.remove_circle,
+                                  size: 28,
+                                  color: Colors.redAccent,
+                                ),
+                                tooltip: 'Delete this item',
+                                onPressed: () {
+                                  runMutation({"id": item['id']});
+                                },
+                              ),
+                            ),
+                            tristate: true,
+                            onChanged: (_) {
+                              runMutation({
+                                "id": idx + 1,
+                                'accomplished': !item['accomplished']
+                              });
+                              print(
+                                  "Update Task [${item['title']}] Status to: ${item['accomplished'] ? 'Done' : 'ToDo'}");
+                              // onRefresh();
+                            }));
+                  },
+                )));
   }
 
   Widget _title({String text = ""}) =>

@@ -116,6 +116,8 @@ class _Main extends State<Main> {
                           ),
                         )),
                     Container(
+                        child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
                       child: ListView.builder(
                           shrinkWrap: true,
                           itemCount: listPerson.length ?? 0,
@@ -139,7 +141,7 @@ class _Main extends State<Main> {
                                   },
                                 ),
                               )),
-                    )
+                    ))
                   ])));
   }
 }
