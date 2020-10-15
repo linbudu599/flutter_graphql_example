@@ -4,11 +4,16 @@ A simple demo shows basic usage of combination of `Flutter` & `GraphQL`.
 
 ## Article
 
-**[WIP]** [在Flutter中使用GraphQL的初体验](./docs/README.md)
+**[WIP]** [在Flutter中使用GraphQL](./docs/README.md)
 
 ## Notice
 
-Creating [`/res/xml/network_security_config.xml`](android/app/src/main/res/xml/network_security_config.xml) And Editing [`AndroidManifest.xml`](android/app/src/main/AndroidManifest.xml) to enable HTTP request in Emulator, otherwise you will got **'Insecure HTTP is not allowed by platform' error**. see [here](https://flutter.dev/docs/release/breaking-changes/network-policy-ios-android#migration-guide) for more details about.
+To solve **'Insecure HTTP is not allowed by platform' Error**, You will need to do these things:
+
+For Android:
+
+- Create [`/res/xml/network_security_config.xml`](android/app/src/main/res/xml/network_security_config.xml).
+- Edit [`AndroidManifest.xml`](android/app/src/main/AndroidManifest.xml).
 
 ```xml
 <!-- network_security_config.xml -->
@@ -28,12 +33,18 @@ Creating [`/res/xml/network_security_config.xml`](android/app/src/main/res/xml/n
 
 ```
 
+For IOS:
+
+- Add [NSExceptionDomains( NSExceptionAllowsInsecureHTTPLoads )](https://developer.apple.com/documentation/bundleresources/information_property_list/nsapptransportsecurity/nsexceptiondomains) to `Info.plist` in `/ios/Runner/Info.plist` folder.
+
+Above actions are required so that we can use **HTTP instead of HTTPS** request in Emulator Device, see [here](https://flutter.dev/docs/release/breaking-changes/network-policy-ios-android#migration-guide) for more details about.
+
 ## Prerequisites
 
-**Make sure you've already installed required environment including:**
+**Make sure you've already finished required environment setup,  including:**
 
-- `NodeJS` & `NPM` / `Yarn`
-- `Flutter` & `Dart`
+- `nodejs` & `npm` / `yarn`
+- `flutter` & `dart`
 - `Android Studio` & `Android/IOS Emulator`
 
 ## Usage
@@ -60,9 +71,10 @@ npm install
 npm run dev
 ```
 
-> Powered by [JSON-GraphQL-Server](https://github.com/marmelab/json-graphql-server).
+> Powered by [JSON-GraphQL-Server](https://github.com/marmelab/json-graphql-server).  
+> Edit [todo.ts](./server/todo.ts) & [person.ts](./server/person.ts) to use content you like.
 
-As server gets ready, you can use visit
+As server gets ready, you can visit
 
 - [http://localhost:1111/graphql](http://localhost:1111/graphql)  (ToDo List)
 - [http://localhost:4000/graphql](http://localhost:4000/graphql)  (Person Admin)
@@ -76,5 +88,5 @@ dart pub get
 flutter run .\lib\main.dart
 ```
 
-> Powered by [GraphQL-Flutter](https://pub.dev/packages/graphql_flutter)
+> Powered by [graphql-flutter package](https://pub.dev/packages/graphql_flutter)
 

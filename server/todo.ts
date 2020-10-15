@@ -15,14 +15,14 @@ const data: { todos: IToDoItem[] } = {
   todos: [
     {
       id: 1,
-      title: "Flutter basic learning",
+      title: "Learn Flutter Basic",
       description: "Widget & Router & ... and so on",
       accomplished: false,
     },
     {
       id: 2,
-      title: "GraphQL basic learning",
-      description: "Query & Mutation & ... and so on",
+      title: "Learn GraphQL Basic",
+      description: "Operation & Scalar & ... and so on",
       accomplished: true,
     },
   ],

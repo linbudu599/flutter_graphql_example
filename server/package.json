@@ -5,7 +5,7 @@
   "scripts": {
     "dev:todolist": "nodemon ./todo.ts",
     "dev:person": "nodemon ./person.ts",
-    "dev":"npm-run-all --parallel --continue-on-error --print-label dev:**"
+    "dev": "npm-run-all --parallel --continue-on-error --print-label dev:**"
   },
   "keywords": [],
   "author": "",
