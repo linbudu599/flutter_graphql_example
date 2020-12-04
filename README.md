@@ -49,10 +49,7 @@ Above actions are required so that we can use **HTTP instead of HTTPS** request 
 
 ## Usage
 
-Two kinds usage of `graphql_flutter` package are included:
-
 - **Declarative Usage**: [ToDo List](lib/todolist/todolist.dart)
-- **Imperative Usage**: [Person Admin](lib/person/person.dart)
 
 ```bash
 git clone git@github.com:linbudu599/flutter_graphql_example.git
@@ -67,7 +64,6 @@ cd ./server
 
 npm install
 
-# only todo-list server will start
 npm run dev
 ```
 
