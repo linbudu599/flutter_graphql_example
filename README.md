@@ -51,8 +51,8 @@ Above actions are required so that we can use **HTTP instead of HTTPS** request 
 
 Two kinds usage of `graphql_flutter` package are included:
 
-- **Imperative Usage**: [Person Admin](lib/person/person.dart)
 - **Declarative Usage**: [ToDo List](lib/todolist/todolist.dart)
+- **Imperative Usage**: [Person Admin](lib/person/person.dart)
 
 ```bash
 git clone git@github.com:linbudu599/flutter_graphql_example.git
@@ -67,19 +67,19 @@ cd ./server
 
 npm install
 
-# both 2 servers will start
+# only todo-list server will start
 npm run dev
 ```
 
-> Powered by [JSON-GraphQL-Server](https://github.com/marmelab/json-graphql-server).  
-> Edit [todo.ts](./server/todo.ts) & [person.ts](./server/person.ts) to use content you like.
+> Powered by [json-graphql-server](https://github.com/marmelab/json-graphql-server).  
+> 
+> Edit [todo.ts](./server/todo.ts) to use the content you like.
 
 As server gets ready, you can visit
 
-- [http://localhost:1111/graphql](http://localhost:1111/graphql)  (ToDo List)
-- [http://localhost:4000/graphql](http://localhost:4000/graphql)  (Person Admin)
+- [http://localhost:1111/graphql](http://localhost:1111/graphql)
 
-to check your **GraphQL Server** easily by [**GraphIQL**](https://github.com/graphql/graphiql), which contains definition of `Query` / `Mutation` info.
+to check your **GraphQL Server** easily by [**GraphiQL**](https://github.com/graphql/graphiql), which contains definition of `Query` / `Mutation` info.
 
 ### Client
 

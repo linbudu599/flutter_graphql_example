@@ -1,5 +1,6 @@
 import express from "express";
 import jsonGraphqlExpress from "json-graphql-server";
+
 import chalk from "chalk";
 
 const app = express();
@@ -8,6 +9,7 @@ interface IToDoItem {
   id: number;
   title: string;
   description: string;
+  createDate: number;
   accomplished: boolean;
 }
 
@@ -18,17 +20,19 @@ const data: { todos: IToDoItem[] } = {
       title: "Learn Flutter Basic",
       description: "Widget & Router & ... and so on",
       accomplished: false,
+      createDate: Date.now(),
     },
     {
       id: 2,
       title: "Learn GraphQL Basic",
-      description: "Operation & Scalar & ... and so on",
+      description: "Operation & Resolver & ... and so on",
       accomplished: true,
+      createDate: Date.now(),
     },
   ],
 };
 
-const PORT = process.env.PORT;
+const PORT = process.env?.PORT ?? 4000;
 
 app.use("/graphql", jsonGraphqlExpress(data));
 
