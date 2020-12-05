@@ -12,7 +12,7 @@
   "watch": ["./*.ts"],
   "env": {
     "NODE_ENV": "development",
-    "PORT": 1111
+    "PORT": 4000
   },
   "legacy-watch": false
 }

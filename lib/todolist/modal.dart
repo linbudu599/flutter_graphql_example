@@ -5,34 +5,32 @@ import "client.dart";
 import "model.dart";
 
 class OperationModal extends StatefulWidget {
-  final Person person;
-  final bool isAdd;
+  final Todo todo;
+  final bool isCreate;
 
-  OperationModal({Key key, this.person, @required this.isAdd})
+  OperationModal({Key key, this.todo, @required this.isCreate})
       : super(key: key);
 
   @override
   OperationModalState createState() =>
-      OperationModalState(this.person, this.isAdd);
+      OperationModalState(this.todo, this.isCreate);
 }
 
 class OperationModalState extends State<OperationModal> {
-  final Person person;
-  final bool isAdd;
+  final Todo todo;
+  final bool isCreate;
 
-  OperationModalState(this.person, this.isAdd);
+  OperationModalState(this.todo, this.isCreate);
 
-  TextEditingController personId = TextEditingController();
-  TextEditingController personName = TextEditingController();
-  TextEditingController personAge = TextEditingController();
+  TextEditingController todoId = TextEditingController();
+  TextEditingController todoTitle = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    if (!this.isAdd) {
-      personId.text = person.getId() ?? "";
-      personName.text = person.getName() ?? "";
-      personAge.text = person.getAge().toString() ?? "";
+    if (!this.isCreate) {
+      todoId.text = todo.getId() ?? "";
+      todoTitle.text = todo.getTitle() ?? "";
     }
   }
 
@@ -40,17 +38,16 @@ class OperationModalState extends State<OperationModal> {
     GraphQLClient _client = clientCreator();
     QueryResult result = await _client.mutate(
       MutationOptions(
-        documentNode: gql(addPerson(
-          personId.text,
-          personName.text,
-          int.parse(personAge.text),
+        documentNode: gql(addTodo(
+          todoId.text,
+          todoTitle.text,
         )),
       ),
     );
     if (!result.hasException) {
-      personId.clear();
-      personName.clear();
-      personAge.clear();
+      // TODO: extract to _clear method
+      todoId.clear();
+      todoTitle.clear();
       Navigator.of(context).pop();
     }
   }
@@ -60,42 +57,47 @@ class OperationModalState extends State<OperationModal> {
     QueryResult result = await _client.mutate(
       MutationOptions(
           documentNode: gql(
-        editPerson(
-          personId.text,
-          personName.text,
-          int.parse(personAge.text),
+        updateTodo(
+          id: todoId.text,
+          title: todoTitle.text,
+          accomplished: true,
         ),
       )),
     );
     if (!result.hasException) {
-      personId.clear();
-      personName.clear();
-      personAge.clear();
+      todoId.clear();
+      todoTitle.clear();
     }
     Navigator.of(context).pop();
   }
 
   Widget get _deleteBtn => FlatButton(
-        child: Text("Delete"),
+        child: Text(
+          "Delete",
+          style: TextStyle(
+            color: Colors.redAccent,
+          ),
+        ),
         onPressed: () async {
           GraphQLClient _client = clientCreator();
           QueryResult result = await _client.mutate(
             MutationOptions(
-              documentNode: gql(deletePerson(personId.text)),
+              documentNode: gql(deleteTodo(todoId.text)),
             ),
           );
+          print(result.data);
+          print(result.exception);
+          print(result.hasException);
           if (!result.hasException) Navigator.of(context).pop();
         },
       );
 
   Widget get _addOrEditBtn => FlatButton(
-      child: Text(this.isAdd ? "Add" : "Edit"),
+      child: Text(this.isCreate ? "Add" : "Edit"),
       onPressed: () async {
-        bool isNotEmpty = personId.text.isNotEmpty &&
-            personName.text.isNotEmpty &&
-            personAge.text.isNotEmpty;
+        bool isNotEmpty = todoId.text.isNotEmpty && todoTitle.text.isNotEmpty;
         if (isNotEmpty) {
-          this.isAdd ? await _handleAdd() : await _handleEdit();
+          this.isCreate ? await _handleAdd() : await _handleEdit();
         } else {
           // TODO: no empty fields warning
         }
@@ -104,7 +106,7 @@ class OperationModalState extends State<OperationModal> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(this.isAdd ? "Add  Person" : "Edit or Delete Exist Person"),
+      title: Text(this.isCreate ? "Add Item" : "Edit or Delete Exist Item"),
       content: Container(
         child: SingleChildScrollView(
           child: ConstrainedBox(
@@ -115,9 +117,10 @@ class OperationModalState extends State<OperationModal> {
               children: <Widget>[
                 Container(
                   child: TextField(
-                    maxLength: 6,
-                    controller: personId,
-                    enabled: this.isAdd,
+                    maxLength: 3,
+                    controller: todoId,
+                    enabled: this.isCreate,
+                    keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       icon: Icon(Icons.perm_identity),
                       labelText: "ID",
@@ -127,22 +130,12 @@ class OperationModalState extends State<OperationModal> {
                 Container(
                   padding: const EdgeInsets.only(top: 80.0),
                   child: TextField(
-                    maxLength: 10,
-                    controller: personName,
+                    maxLength: 50,
+                    controller: todoTitle,
                     decoration: InputDecoration(
                       icon: Icon(Icons.text_format),
-                      labelText: "Name",
+                      labelText: "Title",
                     ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 160.0),
-                  child: TextField(
-                    maxLength: 2,
-                    controller: personAge,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                        labelText: "Age", icon: Icon(Icons.calendar_today)),
                   ),
                 ),
               ],
@@ -155,7 +148,7 @@ class OperationModalState extends State<OperationModal> {
           child: Text("Close"),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        !this.isAdd ? _deleteBtn : null,
+        !this.isCreate ? _deleteBtn : null,
         _addOrEditBtn
       ],
     );

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-import "client.dart";
-import "modal.dart";
-import "model.dart";
+import 'client.dart';
+import 'modal.dart';
+import 'model.dart';
 
-class PersonApp extends StatelessWidget {
+class TodoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GraphQLProvider(
@@ -26,30 +26,31 @@ class Main extends StatefulWidget {
 }
 
 class _Main extends State<Main> {
-  List<Person> listPerson = List<Person>();
+  List<Todo> listTodo = List<Todo>();
   bool _loading = true;
 
   void fillList() async {
     GraphQLClient _client = clientCreator();
     QueryResult result = await _client.query(
       QueryOptions(
-        documentNode: gql(getAll()),
+        documentNode: gql(getAllTodos()),
       ),
     );
+
+    print(result.data);
 
     setState(() {
       _loading = false;
     });
 
     if (!result.hasException) {
-      for (int i = 0; i < result.data["persons"].length; i++) {
+      for (int i = 0; i < result.data["Todos"].length; i++) {
         setState(() {
-          listPerson.add(
-            Person(
-              id: result.data["persons"][i]["id"],
-              name: result.data["persons"][i]["name"],
-              age: result.data["persons"][i]["age"],
-            ),
+          listTodo.add(
+            Todo(
+                id: result.data["Todos"][i]["id"],
+                title: result.data["Todos"][i]["title"],
+                accomplished: result.data["Todos"][i]["accomplished"]),
           );
         });
       }
@@ -62,23 +63,23 @@ class _Main extends State<Main> {
     fillList();
   }
 
-  void _addPerson(context) {
+  void _addTodo(context) {
     showDialog(
       context: context,
-      builder: (BuildContext context) => OperationModal(isAdd: true),
+      builder: (BuildContext context) => OperationModal(isCreate: true),
     ).whenComplete(() {
-      listPerson.clear();
+      listTodo.clear();
       fillList();
     });
   }
 
-  void _editDeletePerson(context, Person person) {
+  void _editDeleteTodo(context, Todo todo) {
     showDialog(
       context: context,
       builder: (BuildContext context) =>
-          OperationModal(isAdd: false, person: person),
+          OperationModal(isCreate: false, todo: todo),
     ).whenComplete(() {
-      listPerson.clear();
+      listTodo.clear();
       fillList();
     });
   }
@@ -91,14 +92,14 @@ class _Main extends State<Main> {
             Icons.notes,
             size: 34,
           ),
-          title: Text("GraphQL Person Admin",
+          title: Text("GraphQL Todo List",
               textAlign: TextAlign.center, style: TextStyle(fontSize: 24)),
           centerTitle: true,
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add, size: 28),
-          onPressed: () => _addPerson(context),
-          tooltip: "Create Person",
+          onPressed: () => _addTodo(context),
+          tooltip: "Create Todo",
         ),
         body: Center(
             child: _loading
@@ -109,7 +110,7 @@ class _Main extends State<Main> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 20),
                           child: Text(
-                            "Person Admin",
+                            "Todo List",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 30.0, color: Colors.black54),
@@ -120,15 +121,15 @@ class _Main extends State<Main> {
                       physics: BouncingScrollPhysics(),
                       child: ListView.builder(
                           shrinkWrap: true,
-                          itemCount: listPerson.length ?? 0,
+                          itemCount: listTodo.length ?? 0,
                           itemBuilder: (context, index) => Padding(
                                 padding: const EdgeInsets.only(left: 22),
                                 child: ListTile(
-                                  leading: Icon(Icons.person),
+                                  leading: Icon(Icons.work),
                                   contentPadding: const EdgeInsets.symmetric(
                                       horizontal: 2.0),
                                   title: Text(
-                                    "${listPerson[index].getName()}",
+                                    "${listTodo[index].getTitle()}",
                                     style: TextStyle(
                                         color: Colors.black87,
                                         fontSize: 22,
@@ -136,8 +137,7 @@ class _Main extends State<Main> {
                                         fontWeight: FontWeight.w600),
                                   ),
                                   onTap: () {
-                                    _editDeletePerson(
-                                        context, listPerson[index]);
+                                    _editDeleteTodo(context, listTodo[index]);
                                   },
                                 ),
                               )),

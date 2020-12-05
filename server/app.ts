@@ -8,8 +8,6 @@ const app = express();
 interface IToDoItem {
   id: number;
   title: string;
-  description: string;
-  createDate: number;
   accomplished: boolean;
 }
 
@@ -18,16 +16,12 @@ const data: { todos: IToDoItem[] } = {
     {
       id: 1,
       title: "Learn Flutter Basic",
-      description: "Widget & Router & ... and so on",
       accomplished: false,
-      createDate: Date.now(),
     },
     {
       id: 2,
       title: "Learn GraphQL Basic",
-      description: "Operation & Resolver & ... and so on",
       accomplished: true,
-      createDate: Date.now(),
     },
   ],
 };

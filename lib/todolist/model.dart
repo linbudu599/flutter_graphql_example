@@ -1,13 +1,17 @@
 import 'package:flutter/foundation.dart';
 
-class Person {
-  const Person({@required this.id, @required this.name, @required this.age});
+class Todo {
+  const Todo({
+    @required this.id,
+    @required this.title,
+    @required this.accomplished,
+  });
 
   final String id;
-  final String name;
-  final int age;
+  final String title;
+  final bool accomplished;
 
   String getId() => this.id;
-  String getName() => this.name;
-  int getAge() => this.age;
+  String getTitle() => this.title;
+  bool getAccomplished() => this.accomplished;
 }

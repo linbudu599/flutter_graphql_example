@@ -8,64 +8,60 @@ HttpLink httpLink = HttpLink(
 );
 
 ValueNotifier<GraphQLClient> client = ValueNotifier(
-  GraphQLClient(
-      link: httpLink,
-      // cache: OptimisticCache(dataIdFromObject: typenameDataIdFromObject),
-      cache: InMemoryCache()),
+  GraphQLClient(link: httpLink, cache: InMemoryCache()),
 );
 
 GraphQLClient clientCreator() => GraphQLClient(
-      // cache: OptimisticCache(dataIdFromObject: typenameDataIdFromObject),
       cache: InMemoryCache(),
       link: httpLink,
     );
 
-String getAll() {
+String getAllTodos() {
   return """ 
     fragment TodoFields on Todo {
       id
       title
-      description
       accomplished
-      createDate
     }
   
     query {
-      persons: allPeople {
-        ... PersonField
+      Todos: allTodos{
+        ... TodoFields
       }
     }
     """;
 }
 
-String addPerson(String id, String name, int age) {
+String addTodo(String id, String title) {
   return """
       mutation {
-          createPerson(id: "$id", name: "$name",  age: $age){
-            id
-            name
-            age
+          createTodo(id: "$id", title: "$title", 
+            accomplished: false){
+              id
+              title
+              accomplished
           }
       }
     """;
 }
 
-String deletePerson(String id) {
+String deleteTodo(String id) {
   return """
       mutation {
-        removePerson(id: "$id")
+        removeTodo(id: "$id")
       } 
     """;
 }
 
-String editPerson(String id, String name, int age) {
+String updateTodo({@required String id, String title, bool accomplished}) {
   return """
       mutation {
-          updatePerson (id: "$id", name: "$name", age: $age){
-            id
-            name
-            age
+          createTodo(id: "$id", title: "$title",
+            accomplished: $accomplished){
+              id
+              title
+              accomplished
           }
-      }    
-     """;
+      }
+    """;
 }
