@@ -1,0 +1,28 @@
+fragment TodoFields on Item {
+  id
+  title
+  desc
+  accomplished
+}
+
+query {
+  # alias
+  getAllTodos: todos {
+    ...TodoFields
+  }
+  getById(id: 1) {
+    ...TodoFields
+  }
+}
+
+mutation {
+  addTodo(item: { title: "TODO3", desc: "THIS_IS_3RD_TODO" }) {
+    ...TodoFields
+  }
+  updateTodoStatus(id: 1) {
+    ...TodoFields
+  }
+  deleteTodo(id: 0) {
+    ...TodoFields
+  }
+}
