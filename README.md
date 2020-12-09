@@ -4,7 +4,7 @@ A simple demo shows basic usage of combination of `Flutter` & `GraphQL`.
 
 ## Article
 
-**[WIP]** [在Flutter中使用GraphQL](./docs/README.md)
+**[WIP]** [在 Flutter 中使用 GraphQL](./docs/README.md)
 
 ## Notice
 
@@ -41,11 +41,11 @@ Above actions are required so that we can use **HTTP instead of HTTPS** request 
 
 ## Prerequisites
 
-**Make sure you've already finished required environment setup,  including:**
+**Make sure you've already finished required environment setup, including:**
 
-- `nodejs` & `npm` / `yarn`
+- `nodejs`
 - `flutter` & `dart`
-- `Android Studio` & `Android/IOS Emulator`
+- `Android/IOS Emulator`
 
 ## Usage
 
@@ -67,13 +67,13 @@ npm install
 npm run dev
 ```
 
-> Powered by [json-graphql-server](https://github.com/marmelab/json-graphql-server).  
-> 
+> Powered by [Koa-GraphQL](https://github.com/graphql-community/koa-graphql) & [LowDB](https://github.com/typicode/lowdb)
+>
 > Edit [todo.ts](./server/todo.ts) to use the content you like.
 
 As server gets ready, you can visit
 
-- [http://localhost:1111/graphql](http://localhost:1111/graphql)
+- [http://localhost:4000/graphql](http://localhost:4000/graphql)
 
 to check your **GraphQL Server** easily by [**GraphiQL**](https://github.com/graphql/graphiql), which contains definition of `Query` / `Mutation` info.
 
@@ -85,4 +85,3 @@ flutter run .\lib\main.dart
 ```
 
 > Powered by [graphql-flutter package](https://pub.dev/packages/graphql_flutter)
-
