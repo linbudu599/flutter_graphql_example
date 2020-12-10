@@ -8,8 +8,11 @@ class OperationModal extends StatefulWidget {
   final Todo todo;
   final bool isCreate;
 
-  OperationModal({Key key, this.todo, @required this.isCreate})
-      : super(key: key);
+  OperationModal({
+    Key key,
+    this.todo,
+    @required this.isCreate,
+  }) : super(key: key);
 
   @override
   OperationModalState createState() =>
@@ -22,15 +25,16 @@ class OperationModalState extends State<OperationModal> {
 
   OperationModalState(this.todo, this.isCreate);
 
-  TextEditingController todoId = TextEditingController();
   TextEditingController todoTitle = TextEditingController();
+  TextEditingController todoDesc = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    print(isCreate);
     if (!this.isCreate) {
-      todoId.text = todo.getId() ?? "";
       todoTitle.text = todo.getTitle() ?? "";
+      todoDesc.text = todo.getDesc() ?? "";
     }
   }
 
@@ -38,16 +42,12 @@ class OperationModalState extends State<OperationModal> {
     GraphQLClient _client = clientCreator();
     QueryResult result = await _client.mutate(
       MutationOptions(
-        documentNode: gql(addTodo(
-          todoId.text,
-          todoTitle.text,
-        )),
+        documentNode: gql(addTodo(todoTitle.text, todoDesc.text)),
       ),
     );
     if (!result.hasException) {
-      // TODO: extract to _clear method
-      todoId.clear();
       todoTitle.clear();
+      todoDesc.clear();
       Navigator.of(context).pop();
     }
   }
@@ -58,15 +58,12 @@ class OperationModalState extends State<OperationModal> {
       MutationOptions(
           documentNode: gql(
         updateTodo(
-          id: todoId.text,
-          title: todoTitle.text,
-          accomplished: true,
-        ),
+            id: this.todo.id, title: todoTitle.text, desc: todoDesc.text),
       )),
     );
     if (!result.hasException) {
-      todoId.clear();
       todoTitle.clear();
+      todoDesc.clear();
     }
     Navigator.of(context).pop();
   }
@@ -80,22 +77,21 @@ class OperationModalState extends State<OperationModal> {
         ),
         onPressed: () async {
           GraphQLClient _client = clientCreator();
-          QueryResult result = await _client.mutate(
-            MutationOptions(
-              documentNode: gql(deleteTodo(todoId.text)),
+          QueryResult result = await _client.mutate(MutationOptions(
+            documentNode: gql(
+              deleteTodo(this.todo.id),
             ),
-          );
-          print(result.data);
-          print(result.exception);
-          print(result.hasException);
-          if (!result.hasException) Navigator.of(context).pop();
+          ));
+
+          if (!result.hasException && result.data.deleteTodo)
+            Navigator.of(context).pop();
         },
       );
 
   Widget get _addOrEditBtn => FlatButton(
       child: Text(this.isCreate ? "Add" : "Edit"),
       onPressed: () async {
-        bool isNotEmpty = todoId.text.isNotEmpty && todoTitle.text.isNotEmpty;
+        bool isNotEmpty = todoTitle.text.isNotEmpty && todoDesc.text.isNotEmpty;
         if (isNotEmpty) {
           this.isCreate ? await _handleAdd() : await _handleEdit();
         } else {
@@ -117,24 +113,22 @@ class OperationModalState extends State<OperationModal> {
               children: <Widget>[
                 Container(
                   child: TextField(
-                    maxLength: 3,
-                    controller: todoId,
-                    enabled: this.isCreate,
-                    keyboardType: TextInputType.number,
+                    maxLength: 10,
+                    controller: todoTitle,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.perm_identity),
-                      labelText: "ID",
+                      icon: Icon(Icons.text_format),
+                      labelText: "Title",
                     ),
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.only(top: 80.0),
                   child: TextField(
-                    maxLength: 50,
-                    controller: todoTitle,
+                    maxLength: 20,
+                    controller: todoDesc,
                     decoration: InputDecoration(
-                      icon: Icon(Icons.text_format),
-                      labelText: "Title",
+                      icon: Icon(Icons.note_add),
+                      labelText: "Desc",
                     ),
                   ),
                 ),

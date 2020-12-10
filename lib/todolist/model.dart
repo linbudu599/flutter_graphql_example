@@ -4,14 +4,17 @@ class Todo {
   const Todo({
     @required this.id,
     @required this.title,
+    @required this.desc,
     @required this.accomplished,
   });
 
-  final String id;
+  final int id;
   final String title;
+  final String desc;
   final bool accomplished;
 
-  String getId() => this.id;
+  int getId() => this.id;
   String getTitle() => this.title;
+  String getDesc() => this.desc;
   bool getAccomplished() => this.accomplished;
 }

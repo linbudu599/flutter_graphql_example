@@ -49,6 +49,7 @@ class _Main extends State<Main> {
           listTodo.add(
             Todo(
                 id: result.data["Todos"][i]["id"],
+                desc: result.data["Todos"][i]["desc"],
                 title: result.data["Todos"][i]["title"],
                 accomplished: result.data["Todos"][i]["accomplished"]),
           );
@@ -118,30 +119,31 @@ class _Main extends State<Main> {
                         )),
                     Container(
                         child: SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: listTodo.length ?? 0,
-                          itemBuilder: (context, index) => Padding(
-                                padding: const EdgeInsets.only(left: 22),
-                                child: ListTile(
-                                  leading: Icon(Icons.work),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 2.0),
-                                  title: Text(
-                                    "${listTodo[index].getTitle()}",
-                                    style: TextStyle(
-                                        color: Colors.black87,
-                                        fontSize: 22,
-                                        letterSpacing: 1.4,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  onTap: () {
-                                    _editDeleteTodo(context, listTodo[index]);
-                                  },
-                                ),
-                              )),
-                    ))
+                            physics: BouncingScrollPhysics(),
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: listTodo.length ?? 0,
+                                itemBuilder: (context, index) => Container(
+                                      child: ListTile(
+                                        contentPadding:
+                                            const EdgeInsets.only(left: 22),
+                                        leading: Icon(Icons.person),
+                                        title: Text(
+                                          "${listTodo[index].getTitle()}",
+                                          style: TextStyle(
+                                              color: Colors.black87,
+                                              fontSize: 18,
+                                              letterSpacing: 1.2,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        subtitle: Text(
+                                            '${listTodo[index].getDesc()}'),
+                                        onTap: () {
+                                          _editDeleteTodo(
+                                              context, listTodo[index]);
+                                        },
+                                      ),
+                                    )))),
                   ])));
   }
 }

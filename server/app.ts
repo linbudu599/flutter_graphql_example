@@ -25,14 +25,20 @@ db.defaults({
   items: [
     {
       id: 0,
-      title: "TODO_1",
-      desc: "DESC_1",
+      title: "NodeJS",
+      desc: "NodeJS 多进程!",
       accomplished: false,
     },
     {
       id: 1,
-      title: "TODO_2",
-      desc: "DESC_2",
+      title: "Flutter",
+      desc: "重学Flutter!",
+      accomplished: false,
+    },
+    {
+      id: 2,
+      title: "GraphQL",
+      desc: "领略另一种风景!",
       accomplished: false,
     },
   ] as ITodoItem[],
@@ -49,33 +55,44 @@ const schema = buildSchema(`
     desc: String!
     accomplished: Boolean!
   }
+
   type Query {
-    todos: [Item!]
-    getById(id: Int): Item
+    allTodos: [Item]!
+    getById(id: Int!): Item
   }
-  input ItemCreation {
-    title: String!
-    desc: String
-  }
+
   type Mutation {
-    addTodo(item: ItemCreation!): Item
-    updateTodoStatus(id: Int!): Item
-    deleteTodo(id: Int): Item
+    createTodo(title: String, desc: String): Item!
+    updateTodo(id: Int!, title: String, desc: String): Item!
+    toggleTodoStatus(id: Int!): Item!
+    deleteTodo(id: Int!): Boolean!
   }
 `);
 
+// TODO: use more lodash api
 const rootResolver = {
-  todos: () => db.getState().items,
+  allTodos: () => db.getState().items,
 
   getById: ({ id }) => db.get("items").find({ id }).value(),
 
-  addTodo: ({ item: { title, desc } }: { item: Partial<ITodoItem> }) => {
+  createTodo: ({ title, desc }: Partial<ITodoItem>) => {
     const id = db.get("items").size().value();
     db.get("items").push({ id, title, desc, accomplished: false }).write();
     return db.get("items").find({ id }).value();
   },
 
-  updateTodoStatus: ({ id }) => {
+  updateTodo: ({ id, title, desc }: Partial<ITodoItem>) => {
+    const original: ITodoItem = db.get("items").find({ id }).value();
+
+    db.get("items")
+      .find({ id })
+      // FIXME: use more suitable method
+      .assign({ title: title ?? original.title, desc: desc ?? original.desc })
+      .write();
+    return db.get("items").find({ id }).value();
+  },
+
+  toggleTodoStatus: ({ id }) => {
     const originalStatus: boolean = db.get("items").find({ id }).value()
       .accomplished;
     db.get("items")
@@ -88,7 +105,7 @@ const rootResolver = {
   deleteTodo: ({ id }) => {
     const item = db.get("items").find({ id }).value();
     db.get("items").remove({ id }).write();
-    return item;
+    return true;
   },
 };
 

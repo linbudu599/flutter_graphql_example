@@ -18,25 +18,39 @@ GraphQLClient clientCreator() => GraphQLClient(
 
 String getAllTodos() {
   return """ 
-    fragment TodoFields on Todo {
-      id
-      title
-      accomplished
-    }
-  
     query {
       Todos: allTodos{
-        ... TodoFields
+        id
+        title
+        desc
+        accomplished
       }
     }
     """;
 }
 
-String addTodo(String id, String title) {
+String addTodo(String title, String desc) {
   return """
       mutation {
-          createTodo(id: "$id", title: "$title", 
-            accomplished: false){
+          createTodo(title: "$title", desc: "$desc"){
+              id
+              title
+              desc
+              accomplished
+          }
+      }
+    """;
+}
+
+String updateTodo({
+  @required int id,
+  String title,
+  String desc,
+}) {
+  return """
+      mutation {
+          updateTodo(id: $id, title: "$title", desc: "$desc"
+          ){
               id
               title
               accomplished
@@ -45,23 +59,22 @@ String addTodo(String id, String title) {
     """;
 }
 
-String deleteTodo(String id) {
+String toggleStatus({@required int id}) {
   return """
       mutation {
-        removeTodo(id: "$id")
+          toggleTodoStatus(id: $id){
+              id
+              title
+              accomplished
+          }
+      }
+    """;
+}
+
+String deleteTodo(int id) {
+  return """
+      mutation {
+        deleteTodo(id: $id)
       } 
-    """;
-}
-
-String updateTodo({@required String id, String title, bool accomplished}) {
-  return """
-      mutation {
-          createTodo(id: "$id", title: "$title",
-            accomplished: $accomplished){
-              id
-              title
-              accomplished
-          }
-      }
     """;
 }
